@@ -8,11 +8,13 @@ Create a database and create the .env file and configurate the connection with d
 
 ## Install
 
-$ composer install
+`$ composer install`
 
-$ php artisan key:generate
+`$ php artisan key:generate`
 
-$ php artisan migrate
+`$ php artisan migrate`
+
+`$ php artisan serve`
 
 ## Laravel PHP Framework
 
