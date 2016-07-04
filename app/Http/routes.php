@@ -20,5 +20,5 @@ Route::get('/', function () {
  *
 */
 
+Route::post('api/user/create', 'Auth\AuthController@create'); // Crea un Usuario
 Route::post('api/user/login', 'Auth\AuthController@login'); // Login de Usuario
-Route::post('api/user/register', 'Auth\AuthController@register'); // Registro de Usuario

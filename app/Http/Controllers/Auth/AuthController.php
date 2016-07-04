@@ -8,6 +8,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use DB;
+use Auth;
+
 class AuthController extends Controller
 {
     /*
@@ -56,22 +61,48 @@ class AuthController extends Controller
         ]);
     }*/
 
-    /**
-     * Create a new user instance after a valid registration.
+     /**
+     * Crea un usuario y verifica antes que no se repita el email
      *
      * @param  array  $data
      * @return User
      */
 
-    /*
-    protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
-    }*/
+    
+    protected function create(Request $request)
+    {   
+        /*
+         *  Tipos de Respuestas
+         *  1 -> Registro Exitoso
+         *  0 -> Registro Fallo, Email ya registrado
+         *
+        */
+
+        $email = $request->get('email');
+
+        $user = User::where('email', $email)->first();
+
+        if(!$user){
+            User::create([
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'password' => bcrypt($request['password']),
+            ]);   
+
+            return response()
+                        ->json([
+                            'status' => 1,
+                            'message' => 'Registro exitoso'
+                        ]);
+
+        }else{
+            return response()
+                        ->json([
+                            'status' => 0,
+                            'status' => 'El Email ya se encuentra registrado'
+                        ]);
+        }
+    }
 
     /**
      * Verifica que exista el usuario en la BD
@@ -124,54 +155,4 @@ class AuthController extends Controller
         }   
     }
 
-    /**
-     * Crea un usuario y verifica antes que no se repitan 
-     * los datos de email, cédula y placa de carro.
-     *
-     * @param  array  $data
-     * @return User
-     */
-    protected function register(Request $request)
-    {
-        /*
-         *  Tipos de Respuestas
-         *  1 -> Registro Exitoso
-         *  0 -> Registro Fallo, Email ya registrado
-         *
-        */
-
-        //Consultamos si existe el email
-
-        $consult = new User;
-
-        $consult = DB::table('users')
-                    ->select('email')
-                    ->where('email', strtolower($consult = $request ->get('email')))
-                    ->first();
-
-        if(!$consult){
-            //No existe el email, se puede registrar
-
-            //Registramos el nuevo usuario
-
-            $user = new User;
-
-            $user->name = $request->get('name');
-            $user->email = strtolower($request->get('email'));
-            $user->password = bcrypt($request->get('password'));
-            $user->save();
-
-            return response()
-                        ->json([
-                            'register_status' => 1, 
-                            'register_message' => '¡Registro exitoso!',
-                            'user' => $user_info
-                        ]);
-        } else {
-            return response()
-                    ->json([
-                        'register_status' => 0, 
-                        'register_message' => 'El Email ya se encuentra registrado'
-                    ]);
-        }
 }
