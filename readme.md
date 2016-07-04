@@ -1,4 +1,20 @@
-# Laravel PHP Framework
+#Laravel-user-auth-stateless
+
+A simple user authentication stateless.
+
+## First
+
+Create a database and create the .env file and configurate the connection with database
+
+## Install
+
+$ composer install
+
+$ php artisan key:generate
+
+$ php artisan migrate
+
+## Laravel PHP Framework
 
 [![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
 [![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
